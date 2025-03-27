@@ -13,7 +13,7 @@ pipeline {
 
         stage('Checkout') {
             steps {
-                 git branch: 'main', url: 'https://github.com/OmerKH/Jenkins-Exercise.git'
+                 git branch: 'main', url: 'https://github.com/OmerKH/CI-CD_Pipeline_with_Docker.git'
             }             
         }
         stage('Build') {
