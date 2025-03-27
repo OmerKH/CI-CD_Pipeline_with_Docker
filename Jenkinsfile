@@ -1,8 +1,12 @@
 pipeline {
-    agent docker {
+    agent {
+        docker {
+
         image 'node:19-alpine'
         }
+    }
     stages {
+
         stage('Checkout') {
             steps {
                 git 'https://github.com/OmerKH/Jenkins-Exercise.git'
