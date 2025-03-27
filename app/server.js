@@ -3,7 +3,12 @@ const pino = require('pino');
 
 const app = express();
 
+app.get('/', (req, res) => {
+    res.send('Hello World!');
+});
+
 const logger = pino({
+
     level: 'info',
     timestamp: () => `,"time":"${new Date().toISOString()}"`
 });
