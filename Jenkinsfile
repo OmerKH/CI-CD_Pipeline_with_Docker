@@ -1,6 +1,9 @@
 pipeline {
     agent {
-        docker { image 'node:19-alpine' }
+        docker { 
+            image 'node:19-alpine' 
+            args '--user root'
+            }
     }
     stages {
 
