@@ -11,6 +11,7 @@ pipeline {
             choices: ['dev', 'staging', 'prod'], 
             description: 'Select deployment environment'
         )
+    }   
     stages {
 
         stage('Checkout') {
