@@ -1,9 +1,5 @@
 pipeline {
-    agent {
-        docker { 
-            image 'node:22.14.0-alpine3.21'
-            args '--user root'
-            }
+    agent  any
     }
     parameters {
         choice(
@@ -21,12 +17,12 @@ pipeline {
         }
         stage('Build') {
             steps {
-                sh 'npm install'
+                sh 'npm docker-compose build'
             }
         }
         stage('Run') {
             steps {
-            sh 'npm start &'
+            sh 'docker-compose up -d'
 
             }
         }
