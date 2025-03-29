@@ -1,10 +1,5 @@
-version: '3'
-services:
-  my-app:
-    image: ${docker-registry}/my-app:1.0
-    ports:
-     - 3000:3000
 
+services:
   mongodb:
     image: mongo
     ports:
@@ -25,6 +20,19 @@ services:
      - ME_CONFIG_MONGODB_SERVER=mongodb
     depends_on:
      - "mongodb"
+  my-app:
+    depends_on:
+      - mongodb
+    environment:
+      - MONGO_DB_USERNAME=admin
+      - MONGO_DB_PWD=password
+    # image: ${docker-registry}/my-app:1.0
+
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+     - 3000:3000
 volumes:
   mongo-data:
     driver: local

@@ -12,16 +12,13 @@ app.use(bodyParser.json());
 
 app.get('/', function (req, res) {
     res.sendFile(path.join(__dirname, "index.html"));
-  });
+});
 
 app.get('/profile-picture', function (req, res) {
   let img = fs.readFileSync(path.join(__dirname, "images/profile-1.jpg"));
   res.writeHead(200, {'Content-Type': 'image/jpg' });
   res.end(img, 'binary');
 });
-
-// use when starting application locally with node command
-let mongoUrlLocal = "mongodb://admin:password@localhost:27017";
 
 // use when starting application as docker container, part of docker-compose
 let mongoUrlDockerCompose = "mongodb://admin:password@mongodb";
@@ -35,12 +32,14 @@ let collectionName = "users";
 
 app.get('/get-profile', function (req, res) {
   let response = {};
-  // Connect to the db using local application or docker compose variable in connection properties
-  MongoClient.connect(mongoUrlLocal, mongoClientOptions, function (err, client) {
-    if (err) throw err;
+  // Connect to the db using docker compose variable in connection properties
+  MongoClient.connect(mongoUrlDockerCompose, mongoClientOptions, function (err, client) {
+    if (err) {
+        console.error("Failed to connect to MongoDB:", err);
+        return res.status(500).send("Failed to connect to database");
+    }
 
     let db = client.db(databaseName);
-
     let myquery = { userid: 1 };
 
     db.collection(collectionName).findOne(myquery, function (err, result) {
@@ -56,9 +55,12 @@ app.get('/get-profile', function (req, res) {
 
 app.post('/update-profile', function (req, res) {
   let userObj = req.body;
-  // Connect to the db using local application or docker compose variable in connection properties
-  MongoClient.connect(mongoUrlLocal, mongoClientOptions, function (err, client) {
-    if (err) throw err;
+  // Connect to the db using docker compose variable in connection properties
+  MongoClient.connect(mongoUrlDockerCompose, mongoClientOptions, function (err, client) {
+    if (err) {
+        console.error("Failed to connect to MongoDB:", err);
+        return res.status(500).send("Failed to connect to database");
+    }
 
     let db = client.db(databaseName);
     userObj['userid'] = 1;
@@ -70,7 +72,6 @@ app.post('/update-profile', function (req, res) {
       if (err) throw err;
       client.close();
     });
-
   });
   // Send response
   res.send(userObj);
@@ -79,4 +80,3 @@ app.post('/update-profile', function (req, res) {
 app.listen(3000, function () {
   console.log("app listening on port 3000!");
 });
-
